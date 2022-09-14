@@ -44,7 +44,7 @@ class ScoredGuess:
 def crack_xor_cipher(ct: bytes) -> ScoredGuess:
     best_guess = ScoredGuess()
 
-    ct_len = len(ciphertext)
+    ct_len = len(ct)
     ct_freqs = {b: ct.count(b) / ct_len for b in range(256)}
 
     for candidate_key in range(256):
