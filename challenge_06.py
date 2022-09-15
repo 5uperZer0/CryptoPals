@@ -1,5 +1,5 @@
 from base64 import b64decode
-from math import floor
+from math import floor, ceil
 from challenge_03 import crack_xor_cipher
 from dataclasses import astuple
 
@@ -33,11 +33,7 @@ def calculate_key_size(ct: str, ll: int, ul: int) -> int:
     return best_size
 
 
-def break_repeating_key_xor(filename: str, ll: int, ul: int) -> str:
-    with open(filename) as f:
-        b64_ct = f.read()
-        b64_ct = "".join(b64_ct.splitlines())
-    ct = b64decode(b64_ct)
+def find_repeating_xor_key(ct: bytes, ll: int, ul: int) -> str:
     block_size = calculate_key_size(ct, ll=ll, ul=ul)
     blocks = [[] for i in range(block_size)]
     for i in range(len(ct)):
@@ -46,5 +42,23 @@ def break_repeating_key_xor(filename: str, ll: int, ul: int) -> str:
     return key
 
 
+def decode_with_key(ct: bytes, key: bytes) -> bytes:
+    key_len = len(key)
+    pt = []
+    i = 0
+    for byte in ct:
+        new_byte = hex(byte ^ key[i % key_len])[2:]
+        if len(new_byte) == 1:
+            new_byte = "0" + new_byte
+        pt.append(new_byte)
+        i += 1
+    return bytes.fromhex("".join(i for i in pt))
+
+
 if __name__ == "__main__":
-    print(break_repeating_key_xor("challenge_06_text.txt", 2, 40))
+    with open("challenge_06_text.txt") as f:
+        b64_ct = f.read()
+        b64_ct = "".join(b64_ct.splitlines())
+    ct = b64decode(b64_ct)
+    key = find_repeating_xor_key(ct, 2, 40)
+    print(decode_with_key(ct, key))
