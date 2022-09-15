@@ -1,7 +1,7 @@
 from base64 import b16decode, b64encode
 
 
-def hex__to_b64(data_hex: bytes) -> bytes:
+def hex_to_b64(data_hex: bytes) -> bytes:
 	return b64encode(b16decode(data_hex, casefold=True))
 
 
