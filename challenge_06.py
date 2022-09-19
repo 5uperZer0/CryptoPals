@@ -1,5 +1,5 @@
 from base64 import b64decode
-from math import floor, ceil
+from math import floor
 from challenge_03 import crack_xor_cipher
 from dataclasses import astuple
 
