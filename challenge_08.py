@@ -9,10 +9,9 @@ def bytes_to_chunks(bytes_in: bytes, chunk_size: int) -> list[bytes]:
 
 
 def detect_ecb(ct: bytes, block_size: int = BLOCK_SIZE) -> bool:
-    num_of_blocks = len(ct)
+    num_of_blocks = len(ct) // block_size
     num_unique_blocks = len(set(bytes_to_chunks(ct, block_size)))
-    repeated_blocks = num_of_blocks - num_unique_blocks
-    if repeated_blocks > 0:
+    if num_of_blocks != num_unique_blocks:
         return True
     return False
 
