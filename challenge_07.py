@@ -1,10 +1,16 @@
 from Crypto.Cipher import AES
 from base64 import b64decode
+from challenge_09 import pkcs7_padding, pkcs7_strip
 
 
-def decode_AES_128_ECB(key: bytes, ct: bytes) -> bytes:
+def decrypt_AES_128_ECB(key: bytes, ct: bytes) -> bytes:
     cipher = AES.new(key, AES.MODE_ECB)
-    return cipher.decrypt(ct)
+    return pkcs7_strip(cipher.decrypt(ct))
+
+
+def encrypt_AES_128_ECB(key: bytes, pt: bytes) -> bytes:
+    cipher = AES.new(key, AES.MODE_ECB)
+    return cipher.encrypt(pkcs7_padding(pt, len(key)))
 
 
 if __name__ == "__main__":
@@ -12,4 +18,7 @@ if __name__ == "__main__":
         b64_ct = f.read()
     ct = b64decode(b64_ct)
     key = b'YELLOW SUBMARINE'
-    print(decode_AES_128_ECB(key, ct))
+    pt = decrypt_AES_128_ECB(key, ct)
+    new_ct = encrypt_AES_128_ECB(key, pt)
+    new_pt = decrypt_AES_128_ECB(key, new_ct)
+    print(new_pt)
