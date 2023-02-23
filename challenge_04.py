@@ -6,7 +6,7 @@ def find_and_crack_xor_cipher(cipher_file: bytes) -> ScoredGuess:
     with open(cipher_file) as f:
         strings = f.read()
 
-        lines = strings.split("\n")
+        lines = strings.splitlines()
         best_guess = ScoredGuess()
         for line in lines:
             current_ciphertext = bytes.fromhex(line)

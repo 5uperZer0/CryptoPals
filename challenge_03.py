@@ -1,6 +1,5 @@
 # Taken from the Cryptopals Guided Tour Series by NCC Group Global
 
-
 from dataclasses import dataclass, astuple
 from typing import Optional
 from challenge_02 import xor_bytes

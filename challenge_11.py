@@ -29,7 +29,6 @@ class EncryptionOracle(EncryptionOracleInterface):
 
 def detect_ecb_cbc(oracle: type[EncryptionOracleInterface], data, key_len) -> str:
     ct = oracle.encrypt(data)
-    num_of_blocks = len(ct) // key_len
     return 'ECB' if detect_ecb(ct, key_len) else 'CBC'
 
 

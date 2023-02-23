@@ -23,10 +23,10 @@ def calculate_key_size(ct: str, ll: int, ul: int) -> int:
     best_size = ll
     for i in range(ll, ul + 1):
         num_of_groups = floor(len(ct) / i)
-        num_of_iters = floor(num_of_groups / 2)
-        current_dist = (sum(calculate_hamming_distance(ct[(iteration * 2) * i: ((iteration * 2) + 1) * i],
-                                                       ct[(iteration * 2 + 1) * i: ((iteration * 2 + 1) + 1) * i]) for
-                            iteration in range(num_of_iters)) / num_of_iters) / i
+        num_of_iters = floor(num_of_groups/2)
+        current_dist = (sum(calculate_hamming_distance(ct[group:group + i], ct[group + i:group + i * 2]) for
+                            group in range(0, num_of_iters * i, i*2)) / num_of_groups) / i
+
         if current_dist < best_distance:
             best_distance = current_dist
             best_size = i
@@ -45,14 +45,12 @@ def find_repeating_xor_key(ct: bytes, ll: int, ul: int) -> str:
 def decode_with_key(ct: bytes, key: bytes) -> bytes:
     key_len = len(key)
     pt = []
-    i = 0
-    for byte in ct:
+    for i, byte in enumerate(ct):
         new_byte = hex(byte ^ key[i % key_len])[2:]
         if len(new_byte) == 1:
             new_byte = "0" + new_byte
         pt.append(new_byte)
-        i += 1
-    return bytes.fromhex("".join(i for i in pt))
+    return bytes.fromhex("".join(pt))
 
 
 if __name__ == "__main__":
