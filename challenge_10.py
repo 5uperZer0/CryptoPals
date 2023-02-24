@@ -8,8 +8,7 @@ def encrypt_aes_cbc(key: bytes, pt: bytes, iv: bytes) -> bytes:
     key_len = len(key)
     local_pt = pkcs7_padding(pt, key_len)
 
-    num_of_blocks = len(local_pt) // key_len
-    pt_blocks = [local_pt[inc: inc + key_len] for inc in range(0, num_of_blocks, key_len)]
+    pt_blocks = [local_pt[inc: + key_len] for inc in range(0, len(local_pt), key_len)]
     ct_blocks = []
     for i, block in enumerate(pt_blocks):
         if i == 0:
@@ -22,8 +21,7 @@ def encrypt_aes_cbc(key: bytes, pt: bytes, iv: bytes) -> bytes:
 
 def decrypt_aes_cbc(key: bytes, ct: bytes, iv: bytes) -> bytes:
     key_len = len(key)
-    num_of_blocks = len(ct) // key_len
-    ct_blocks = [ct[inc: inc + key_len] for inc in range(0, num_of_blocks, key_len)]
+    ct_blocks = [ct[inc: inc + key_len] for inc in range(0, len(ct), key_len)]
     pt_blocks = []
     for i, block in reversed(list(enumerate(ct_blocks))):
         if i == 0:
@@ -31,7 +29,6 @@ def decrypt_aes_cbc(key: bytes, ct: bytes, iv: bytes) -> bytes:
         else:
             prev_block = ct_blocks[i - 1]
         pt_blocks.append(xor_bytes(decrypt_AES_128_ECB(key, block), prev_block))
-    print(b''.join(reversed(pt_blocks)))
 
     return pkcs7_strip(b''.join(reversed(pt_blocks)))
 
