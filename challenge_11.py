@@ -6,12 +6,7 @@ from challenge_07 import encrypt_AES_128_ECB
 from challenge_08 import detect_ecb
 
 
-class EncryptionOracleInterface:
-    def encrypt(self, data: bytes) -> bytes:
-        pass
-
-
-class EncryptionOracle(EncryptionOracleInterface):
+class EncryptionOracle:
     def __init__(self, key_size: int):
         self.key = urandom(key_size)
         self.key_size = key_size
@@ -27,10 +22,10 @@ class EncryptionOracle(EncryptionOracleInterface):
             return encrypt_aes_cbc(self.key, pt, urandom(self.key_size))
 
 
-def detect_ecb_cbc(oracle: type[EncryptionOracleInterface], data, key_len) -> str:
+def detect_ecb_cbc(oracle: EncryptionOracle, data: bytes, key_len: int) -> str:
     ct = oracle.encrypt(data)
-    return 'ECB' if detect_ecb(ct, key_len) else 'CBC'
 
+    return 'ECB' if detect_ecb(ct, key_len) else 'CBC'
 
 def main():
     key_len = 16
@@ -41,7 +36,10 @@ def main():
     for _ in range(100):
         detections.append(detect_ecb_cbc(oracle, data, key_len))
 
-    print(f"Percentage correct: {100 * sum(1 if detections[i] == oracle.history[i] else 0 for i in range(100)) // 100}%")
+    print(oracle.history)
+    print(detections)
+
+    print(f"Percentage correct: {sum(1 if detections[i] == oracle.history[i] else 0 for i in range(100))}%")
 
 
 if __name__ == "__main__":
