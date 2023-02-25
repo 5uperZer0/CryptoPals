@@ -1,14 +1,14 @@
 from challenge_07 import encrypt_AES_128_ECB, decrypt_AES_128_ECB
 from challenge_02 import xor_bytes
+from challenge_08 import bytes_to_chunks
 from challenge_09 import pkcs7_padding, pkcs7_strip
-import challenge_08
 from base64 import b64decode
 
 
 def encrypt_aes_cbc(key: bytes, pt: bytes, iv: bytes) -> bytes:
     key_len = len(key)
     local_pt = pkcs7_padding(pt, key_len)
-    pt_blocks = challenge_08.bytes_to_chunks(local_pt, key_len)
+    pt_blocks = bytes_to_chunks(local_pt, key_len)
     ct_blocks = []
     prev_block = iv
     for block in pt_blocks:
@@ -20,7 +20,7 @@ def encrypt_aes_cbc(key: bytes, pt: bytes, iv: bytes) -> bytes:
 
 
 def decrypt_aes_cbc(key: bytes, ct: bytes, iv: bytes) -> bytes:
-    ct_blocks = challenge_08.bytes_to_chunks(ct, len(key))
+    ct_blocks = bytes_to_chunks(ct, len(key))
 
     pt_blocks = []
     prev_block = iv
@@ -41,7 +41,8 @@ if __name__ == "__main__":
     key = b'YELLOW SUBMARINE'
     iv = b'\x00' * len(key)
 
-    decrypted = decrypt_aes_cbc(key, ct, iv)
+    # decrypted = decrypt_aes_cbc(key, ct, iv)
+    decrypted = b'A' * 48
     print(decrypted)
     re_encrypted = encrypt_aes_cbc(key, decrypted, iv)
     print(decrypt_aes_cbc(key, re_encrypted, iv))

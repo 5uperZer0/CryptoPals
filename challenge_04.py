@@ -10,8 +10,8 @@ def find_and_crack_xor_cipher(cipher_file: bytes) -> ScoredGuess:
         best_guess = ScoredGuess()
         for line in lines:
             current_ciphertext = bytes.fromhex(line)
-            guess = crack_xor_cipher(current_ciphertext)
-            best_guess = min(best_guess, guess)
+            guess = crack_xor_cipher(current_ciphertext)        # Get best attempt at cracking
+            best_guess = min(best_guess, guess)     # Compare best attempts between lines
         return best_guess
 
 

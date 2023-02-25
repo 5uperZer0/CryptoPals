@@ -5,12 +5,12 @@ from challenge_09 import pkcs7_padding, pkcs7_strip
 
 def decrypt_AES_128_ECB(key: bytes, ct: bytes) -> bytes:
     cipher = AES.new(key, AES.MODE_ECB)
-    return pkcs7_strip(cipher.decrypt(ct))
+    return pkcs7_strip(cipher.decrypt(ct))      # Return message and strip any padding
 
 
 def encrypt_AES_128_ECB(key: bytes, pt: bytes) -> bytes:
     cipher = AES.new(key, AES.MODE_ECB)
-    return cipher.encrypt(pkcs7_padding(pt, len(key)))
+    return cipher.encrypt(pkcs7_padding(pt, len(key)))      # Add padding then encrypt
 
 
 if __name__ == "__main__":
